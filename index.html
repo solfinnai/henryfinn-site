@@ -136,6 +136,21 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
 .cols { display: flex; gap: 30px; }
 .col { flex: 1; }
 @media (max-width: 600px) { .cols { flex-direction: column; gap: 0; } body { padding: 8px; } }
+.about-wrap { display: flex; gap: 18px; align-items: flex-start; }
+.about-wrap .about-text { flex: 1; min-width: 0; }
+.about-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 35%;
+  border: 1px solid #ccc;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .about-wrap { flex-direction: column; align-items: center; text-align: left; }
+  .about-photo { width: 120px; height: 120px; }
+}
 </style>
 </head>
 
@@ -165,9 +180,14 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
 <!-- ABOUT -->
 <section class="section" id="about">
 <h2>WHO IS HENRY FINN</h2>
+<div class="about-wrap">
+<img class="about-photo" src="henry.png" alt="Henry Finn">
+<div class="about-text">
 <p>Henry Finn is an award-winning creative technologist with experience creating high-level productions across every major shift in media technology — from the first MiniDV tape to VR/AR, 360 video, blockchain, and AI — for some of the world's biggest talent and brands.</p>
 <p>A rare operator, Finn has worked with leading technology companies including Google, Facebook, Samsung, and Spotify; gaming leaders such as Activision; and artists and athletes including Johnny Depp, Jamie Foxx, and Steph Curry. Starting in 2020, he also helped raise money for Andrew Yang on both his presidential and mayoral runs, driven by Yang's early focus on artificial intelligence and its impact on the future.</p>
 <p>In 2023, Finn led the acquisition of 0N1 Force, the first crypto anime project in history, and has since reformed it into the first AI-powered self-improvement anime franchise focused on using AI to support youth mental health and is currently working with some of the world's largest anime IP to develop.</p>
+</div>
+</div>
 </section>
 
 <hr>
