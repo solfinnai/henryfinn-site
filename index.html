@@ -150,6 +150,12 @@ h3 { font-size: 14px; margin: 12px 0 2px 0; color: #333; }
 p { margin: 0 0 14px 0; }
 hr { border: none; border-top: 1px solid #ccc; margin: 12px 0; }
 blockquote { margin: 6px 0 6px 16px; padding-left: 10px; border-left: 2px solid #999; color: #444; font-style: italic; }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f6f4ee;
+}
 .header-block { background: #eee8d5; padding: 8px 12px; margin-bottom: 8px; border: 1px solid #ccc; }
 .header-block p, .footer p { margin: 4px 0; }
 .home-control {
@@ -225,11 +231,11 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
 <a href="#work">work</a>
 <a href="#faq">faq</a>
 <span class="nav-sep">|</span>
-<a href="https://www.linkedin.com/in/henryfinnco/" rel="me noopener">linkedin</a>
-<a href="https://x.com/henryfinnco" rel="me noopener">x</a>
-<a href="https://youtube.com/@henryfinnco" rel="me noopener">youtube</a>
-<a href="https://instagram.com/henryfinnco" rel="me noopener">instagram</a>
-<a href="https://tiktok.com/@henryfinnco" rel="me noopener">tiktok</a>
+<a href="https://www.linkedin.com/in/henryfinnco/" target="_blank" rel="me noopener">linkedin</a>
+<a href="https://x.com/henryfinnco" target="_blank" rel="me noopener">x</a>
+<a href="https://youtube.com/@henryfinnco" target="_blank" rel="me noopener">youtube</a>
+<a href="https://instagram.com/henryfinnco" target="_blank" rel="me noopener">instagram</a>
+<a href="https://tiktok.com/@henryfinnco" target="_blank" rel="me noopener">tiktok</a>
 </nav>
 </header>
 
@@ -375,17 +381,43 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
     show(sectionId());
   }
 
-  document.getElementById('home-control').addEventListener('click', function (e) {
-    e.preventDefault();
-    if (location.hash) {
-      history.pushState('', document.title, location.pathname + location.search);
+  function go(id) {
+    var url = id ? '#' + id : (location.pathname + location.search);
+    if (id) {
+      if (location.hash !== '#' + id) history.pushState('', document.title, url);
+    } else if (location.hash) {
+      history.pushState('', document.title, url);
     }
     apply();
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('home-control').addEventListener('click', function (e) {
+    e.preventDefault();
+    go('');
   });
 
-  window.addEventListener('hashchange', apply);
-  window.addEventListener('popstate', apply);
+  document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      go(a.getAttribute('href').replace(/^#/, ''));
+    });
+  });
+
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('hashchange', function () {
+    apply();
+    window.scrollTo(0, 0);
+  });
+  window.addEventListener('popstate', function () {
+    apply();
+    window.scrollTo(0, 0);
+  });
   apply();
+  window.scrollTo(0, 0);
+  window.addEventListener('load', function () {
+    window.scrollTo(0, 0);
+  });
 })();
 </script>
 
