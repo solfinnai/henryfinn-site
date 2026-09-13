@@ -151,10 +151,31 @@ hr { border: none; border-top: 1px solid #ccc; margin: 12px 0; }
 blockquote { margin: 6px 0 6px 16px; padding-left: 10px; border-left: 2px solid #999; color: #444; font-style: italic; }
 .header-block { background: #eee8d5; padding: 8px 12px; margin-bottom: 8px; border: 1px solid #ccc; }
 .header-block p, .footer p { margin: 4px 0; }
+.home-control {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.home-control:visited, .home-control:hover { color: inherit; text-decoration: none; }
+.home-control:focus {
+  outline: 2px solid #00c;
+  outline-offset: 2px;
+}
 .nav { font-size: 12px; margin: 4px 0 10px 0; }
 .nav a { margin-right: 10px; }
+.nav a.is-active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
 .nav-sep { color: #bbb; margin-right: 10px; }
 .section { margin-bottom: 6px; }
+.js .section { display: none; }
+.js .section.is-open { display: block; }
+.js .section.is-open > h2:first-child { margin-top: 8px; }
+.js hr { display: none; }
+.js.is-home .footer { display: none; }
 .press-item { margin: 3px 0; padding-left: 12px; }
 .press-item::before { content: "> "; color: #999; }
 .stat { display: inline; }
@@ -186,12 +207,16 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
 
 <body>
 
+<script>document.documentElement.classList.add('js');</script>
+
 <!-- HEADER -->
 <header>
+<a href="#" class="home-control" id="home-control" aria-label="Home">
 <div class="header-block"><h1>HENRY FINN</h1>
-<p><strong>artistpreneur &middot; ceo &middot; builder &middot; creator</strong></p>
+<p><strong>human &middot; artistpreneur &middot; activist</strong></p>
 <p class="tag">san francisco bay area</p>
 </div>
+</a>
 
 <nav class="nav" aria-label="Main navigation">
 <a href="#about">about</a>
@@ -254,10 +279,10 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
 <table>
 <tr><td><strong><a href="https://svin.biz">Silicon Valley Insider</a></strong><br><span class="tag">July 2026&ndash;present</span></td><td>&nbsp;</td><td>Producer &amp; Host. Producer and host covering technology, markets, and the people building AI infrastructure.</td></tr>
 <tr><td><strong>Enclave Studios</strong><br><span class="tag">2026</span></td><td>&nbsp;</td><td>Founded a creative studio for the future of IP at the intersection of East and West — a creative and technological development house pushing IP franchises into the frontier of AI, Blockchain, and cross-reality storytelling. Led the IP development of the world's first community-owned cross-media anime franchise, with world building by Paul Jenkins and Bryan Li. Sold out the first edition premium comic book in less than 24 hours. Currently optioning top IP from creators working with multi-billion dollar franchises from Marvel, DC, Anime, and more.</td></tr>
+<tr><td><strong>Luminous US Productions</strong><br><span class="tag">January 2015&ndash;2023</span></td><td>&nbsp;</td><td>Founder &amp; CEO. Built and scaled an $8M/year commercial production company from the ground up. Produced high-end commercials and branded campaigns for Google, Nike, Samsung, Kia, Walmart, and other Fortune 500 and entertainment brands. Work spanned creative direction, production, talent, post, business operations, and P&amp;L ownership.</td></tr>
 <tr><td><strong>Storyoscopic Films</strong><br><span class="tag">2015&ndash;2021</span></td><td>&nbsp;</td><td>Producer and director packaging, financing, and distributing films globally. Successfully sold a 12-year feature-film documentary about the Golden State Warriors to a major studio (that went bankrupt during post-production, whoops). Currently an advisor.</td></tr>
 <tr><td><strong>Blueprint Media</strong><br><span class="tag">2009&ndash;2015</span></td><td>&nbsp;</td><td>Storytelling &amp; Production Agency that worked with major tech companies and startups from Google, Mozilla, Facebook, Tim Draper, and many more. Acquired by Luminous Seoul, a Korea-based media agency.</td></tr>
 <tr><td><strong>Empty Kingdom</strong><br><span class="tag">January 2008&ndash;October 2015</span></td><td>&nbsp;</td><td>Co-Founder. Created one of the leading Fine Art blogs on the planet and discovered and represented amazing artists, threw crazy events, and learned the meaning of building a global community.</td></tr>
-<tr><td><strong>Luminous US Productions</strong><br><span class="tag">January 2008&ndash;December 2014</span></td><td>&nbsp;</td><td>Founder &amp; CEO. Built and scaled an $8M/year commercial production company from the ground up. Produced high-end commercials and branded campaigns for Google, Nike, Samsung, Kia, Walmart, and other Fortune 500 and entertainment brands. Work spanned creative direction, production, talent, post, business operations, and P&amp;L ownership.</td></tr>
 </table>
 
 <h2>VENTURES & ROLES: TECHNOLOGY</h2>
@@ -307,6 +332,48 @@ td { padding: 2px 12px 2px 0; vertical-align: top; font-size: 13px; }
 <footer class="footer">
 <p>&copy; 2026 Henry Finn</p>
 </footer>
+
+<script>
+(function () {
+  var SECTIONS = ['about', 'bio', 'work', 'faq'];
+
+  function sectionId() {
+    var id = (location.hash || '').replace(/^#/, '');
+    if (!id || SECTIONS.indexOf(id) === -1) return '';
+    return id;
+  }
+
+  function show(id) {
+    document.querySelectorAll('main .section').forEach(function (el) {
+      var open = el.id === id;
+      el.classList.toggle('is-open', open);
+    });
+    document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
+      var active = !!id && a.getAttribute('href') === '#' + id;
+      a.classList.toggle('is-active', active);
+      if (active) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    document.documentElement.classList.toggle('is-home', !id);
+  }
+
+  function apply() {
+    show(sectionId());
+  }
+
+  document.getElementById('home-control').addEventListener('click', function (e) {
+    e.preventDefault();
+    if (location.hash) {
+      history.pushState('', document.title, location.pathname + location.search);
+    }
+    apply();
+  });
+
+  window.addEventListener('hashchange', apply);
+  window.addEventListener('popstate', apply);
+  apply();
+})();
+</script>
 
 </body>
 </html>
