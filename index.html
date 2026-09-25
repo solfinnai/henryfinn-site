@@ -153,7 +153,8 @@ header {
   text-underline-offset: 3px;
 }
 .nav-sep { color: #bbb; margin: 0 8px; }
-.section { scroll-margin-top: 148px; }
+html { scroll-padding-top: 11rem; }
+.section { scroll-margin-top: 11rem; }
 .lede { margin-bottom: 16px; }
 .credits { border-collapse: collapse; width: 100%; margin: 4px 0 0 0; }
 .credits th {
@@ -183,7 +184,8 @@ header {
   .credits, .credits tbody, .credits tr, .credits th, .credits td { display: block; width: auto; }
   .credits th { padding: 10px 0 0 0; }
   .credits td { padding: 2px 0 8px 0; }
-  .section { scroll-margin-top: 168px; }
+  html { scroll-padding-top: 16rem; }
+  .section { scroll-margin-top: 16rem; }
 }
 </style>
 </head>
@@ -278,7 +280,7 @@ header {
 
 <!-- PRESS -->
 <section class="section" id="press">
-<h2>PRESS</h2>
+<h2>PRESS &amp; SPEAKING</h2>
 <p>Selected appearances and briefings available on request.</p>
 <p>For press, speaking, and partnerships:<br>
 <a href="mailto:press@henryfinn.com">press@henryfinn.com</a></p>
@@ -300,6 +302,15 @@ header {
     return document.querySelector(a.getAttribute('href'));
   }).filter(Boolean);
 
+  function fit() {
+    var header = document.querySelector('header');
+    var h = (header ? header.offsetHeight : 140) + 18;
+    document.documentElement.style.scrollPaddingTop = h + 'px';
+    document.querySelectorAll('.section').forEach(function (el) {
+      el.style.scrollMarginTop = h + 'px';
+    });
+  }
+
   function mark() {
     var header = document.querySelector('header');
     var line = window.scrollY + (header ? header.offsetHeight : 0) + 24;
@@ -315,9 +326,21 @@ header {
     });
   }
 
+  fit();
+  if (location.hash && location.hash !== '#top') {
+    var target = document.querySelector(location.hash);
+    if (target && target.scrollIntoView) target.scrollIntoView();
+  }
   window.addEventListener('scroll', mark, { passive: true });
+  window.addEventListener('resize', function () {
+    fit();
+    mark();
+  });
   window.addEventListener('hashchange', mark);
-  window.addEventListener('load', mark);
+  window.addEventListener('load', function () {
+    fit();
+    mark();
+  });
   mark();
 })();
 </script>
